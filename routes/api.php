@@ -32,9 +32,11 @@ Route::group(['middleware' => ["auth:sanctum"]], function () {
     Route::prefix('room')->controller(RoomController::class)->group(function () {
         Route::put('clean/{id}', 'clean');
         Route::put('lock/{id}', 'lock');
+        Route::put('enable/{id}', 'enable');
         Route::get('pendient', 'getPendientRoomsByPersonId');
         Route::get('all', 'getRoomsByPersonId');
         Route::get('incidence', 'getIncidencesByPersonId');
+        Route::get('all/enabled', 'getRooms');
     });
 });
 
