@@ -35,8 +35,11 @@ Route::group(['middleware' => ["auth:sanctum"]], function () {
         Route::put('enable/{id}', 'enable');
         Route::get('pendient', 'getPendientRoomsByPersonId');
         Route::get('all', 'getRoomsByPersonId');
-        Route::get('incidence', 'getIncidencesByPersonId');
         Route::get('all/enabled', 'getRooms');
+    });
+    Route::prefix('incidence')->controller(RoomController::class)->group(function () {
+        Route::put('{id}', 'updateObservationRoom');
+        Route::get('all', 'getIncidencesByPersonId');
     });
 });
 
