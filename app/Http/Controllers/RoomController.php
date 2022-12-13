@@ -213,25 +213,11 @@ class RoomController extends Controller
                 ->orderBy('rooms.building_id')
                 ->orderBy('person_rooms.id')->get()
                 ->makeHidden(["building_id", "status_id", "room_id", "observations"]);
-            $personrooms2 = $personrooms;
             $result = [];
-            $observations = [];
             $size = sizeof($personrooms) - 1;
-            $size2 = sizeof($personrooms) - 1;
             for ($i = 0; $i <= $size; $i++) {
                 $personrooms[$i]->building = Building::find($personrooms[$i]->room->building_id);
-                array_push($observations, $personrooms2[$i]->observations);
-                for ($j = 0; $j <= $size2; $j++) {
-                    if ($personrooms[$i]->person_room_id == $personrooms2[$j]->person_room_id) {
-                        array_push($observations, $personrooms2[$j]->observations);
-                        $personrooms2->splice($j, 1);
-                        $size = sizeof($personrooms) - 1;
-                        $size2 = sizeof($personrooms2) - 1;
-                    }
-                }
-                $personrooms[$i]->observationsAll = $observations;
                 array_push($result, $personrooms[$i]);
-                $observations = [];
             }
             return $this->getResponse201('rooms', 'founded', $result);
         } else {
