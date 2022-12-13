@@ -211,7 +211,7 @@ class RoomController extends Controller
                 ->join('observations', 'person_rooms.id', 'observations.person_room_id')
                 ->where("person_id", $user->person_id)
                 ->orderBy('rooms.building_id')
-                ->orderBy('person_rooms.id')->get()
+                ->orderBy('person_rooms.updated_at', "desc")->get()
                 ->makeHidden(["building_id", "status_id", "room_id", "observations"]);
             $result = [];
             $size = sizeof($personrooms) - 1;
