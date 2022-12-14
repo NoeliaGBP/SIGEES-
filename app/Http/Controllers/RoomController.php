@@ -149,7 +149,7 @@ class RoomController extends Controller
             $personRoom->makeHidden(["obs", "room_id", "status_id", "person_id"]);
             if ($personRoom) {
                 if ($personRoom->obs) {
-                    $status = Status::where("name", "ENABLED")->first();
+                    $status = Status::where("name", "PENDIENT")->first();
                     if ($status) {
                         $observations = [];
                         foreach ($personRoom->obs as $obs) {
