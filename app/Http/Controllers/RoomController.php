@@ -304,4 +304,27 @@ class RoomController extends Controller
             }
         }
     }
+
+    public function getRoomId($id)
+    {
+        $pendient = Status::where("name", "PENDIENT")->first();
+        if ($pendient) {
+            $personrooms = PersonRooms::with("room", "status")
+                ->join('status', 'person_rooms.status_id', 'status.id')
+                ->join('rooms', 'person_rooms.room_id', 'rooms.id')
+                ->join('observations', 'observations.person_room_id', 'person_rooms.id')
+                ->where("person_rooms.status_id", $pendient->id)
+                ->where("person_rooms.room_id", $id)
+                ->get()
+                ->makeHidden(["building_id", "status_id", "room_id"]);
+            $result = [];
+            foreach ($personrooms as $personroom) {
+                $personroom->building = Building::find($personroom->room->building_id);
+                array_push($result, $personroom);
+            }
+        } else {
+            return $this->getResponse500(["Status not founded"]);
+        }
+        return $this->getResponse201('rooms', 'founded', $result);
+    }
 }
