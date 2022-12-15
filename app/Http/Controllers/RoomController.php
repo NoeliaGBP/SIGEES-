@@ -178,30 +178,6 @@ class RoomController extends Controller
         }
     }
 
-    public function getRooms()
-    {
-        $status = Status::where("name", "ENABLED")->first();
-        $pendient = Status::where("name", "PENDIENT")->first();
-        if ($status && $pendient) {
-            $personrooms = PersonRooms::with("room", "status")
-                ->join('status', 'person_rooms.status_id', 'status.id')
-                ->join('rooms', 'person_rooms.room_id', 'rooms.id')
-                ->orderBy('rooms.building_id')
-                ->where("rooms.status_id", "<>", $status->id)
-                ->where("rooms.status_id", "<>", $pendient->id)
-                ->orderBy('rooms.status_id')->get()
-                ->makeHidden(["building_id", "status_id", "room_id"]);
-            $result = [];
-            foreach ($personrooms as $personroom) {
-                $personroom->building = Building::find($personroom->room->building_id);
-                array_push($result, $personroom);
-            }
-        } else {
-            return $this->getResponse500(["Status not founded"]);
-        }
-        return $this->getResponse201('rooms', 'founded', $result);
-    }
-
     public function getPendientRoomsByPersonId()
     {
         $user = User::find(auth()->user()->id);
@@ -303,6 +279,30 @@ class RoomController extends Controller
                 return $this->getResponse500([$e->getMessage()]);
             }
         }
+    }
+
+    public function getRooms()
+    {
+        $status = Status::where("name", "ENABLED")->first();
+        $pendient = Status::where("name", "PENDIENT")->first();
+        if ($status && $pendient) {
+            $personrooms = PersonRooms::with("room", "status")
+                ->join('status', 'person_rooms.status_id', 'status.id')
+                ->join('rooms', 'person_rooms.room_id', 'rooms.id')
+                ->orderBy('rooms.building_id')
+                ->where("rooms.status_id", "<>", $status->id)
+                ->where("rooms.status_id", "<>", $pendient->id)
+                ->orderBy('rooms.status_id')->get()
+                ->makeHidden(["building_id", "status_id", "room_id"]);
+            $result = [];
+            foreach ($personrooms as $personroom) {
+                $personroom->building = Building::find($personroom->room->building_id);
+                array_push($result, $personroom);
+            }
+        } else {
+            return $this->getResponse500(["Status not founded"]);
+        }
+        return $this->getResponse201('rooms', 'founded', $result);
     }
 
     public function getRoomId($id)
