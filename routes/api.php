@@ -33,7 +33,7 @@ Route::group(['middleware' => ["auth:sanctum"]], function () {
         Route::put('clean/{id}', 'clean');
         Route::put('lock/{id}', 'lock');
         Route::put('enable/{id}', 'enable');
-        Route::get('{id}', 'getRoomId');
+        Route::get('get/{id}', 'getRoomId');
         Route::get('pendient', 'getPendientRoomsByPersonId');
         Route::get('all', 'getRoomsByPersonId');
         Route::get('all/enabled', 'getRooms');
